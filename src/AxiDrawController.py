@@ -51,21 +51,22 @@ def get_path_svg_files(path_svg_dir_path = "/home/jimay/Downloads/idraw/src/path
 
 
 path_svg_files = get_path_svg_files()
+len_path_svg_files = len(path_svg_files)
 ad = axidraw.AxiDraw()          # Create class instance
 
 try:
     # Plot each SVG file in sequence
-    for path_svg_file in path_svg_files:
+    for i, path_svg_file in enumerate(path_svg_files):
 
         ser.write(b'roll\n')
-        print("Sent exchange paper command...")
+        print("exchanging paper...")
         
         while True:
             if ser.in_waiting > 0:
                 response = ser.readline().decode('utf-8').strip()
                 if response == "complete":
                     print("Complete exchange")
-                    print(f"Start axi draw of {path_svg_file}")
+                    print(f"Start axi draw of {path_svg_file} ({i+1}/{len_path_svg_files+1})")
                     plot_svg(path_svg_file, ad)
                     break
                 
@@ -76,5 +77,8 @@ except KeyboardInterrupt as e:
     print(f"Ctl-C")
     
 finally:
+    ad.moveto(0, 0)
+    ad.penup()
+    ad.delay(5000)
     ser.close()
     ad.disconnect()
