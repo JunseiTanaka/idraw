@@ -1,4 +1,3 @@
-```markdown
 # iDraw
 
 ## プロジェクト概要
