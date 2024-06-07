@@ -3,10 +3,7 @@ import os
 import serial
 import time
 
-#TODO: serial port automatic detect
-#TODO: Failed to connect to AxiDraw
 
-# シリアルポートの設定
 ser = serial.Serial('/dev/ttyACM1', 115200, timeout=1)
 time.sleep(2)  # シリアル接続の安定化のための待機時間
 
@@ -44,11 +41,8 @@ def plot_svg(file_name, ad):
 def get_path_svg_files(path_svg_dir_path = "/home/jimay/Downloads/idraw/src/path_svg/"):
     # List of SVG files to plot
     path_svg_files = []
-    # 指定されたディレクトリ内のファイルを取得
     for filename in os.listdir(path_svg_dir_path):
-        # ファイルが.svg拡張子を持つか確認
         if filename.endswith(".svg"):
-            # ファイルの絶対パスをリストに追加
             path_svg_files.append(path_svg_dir_path + str(os.path.join(filename)))
 
         path_svg_files.sort()
@@ -64,13 +58,13 @@ try:
     for path_svg_file in path_svg_files:
 
         ser.write(b'roll\n')
-        print("Sent: roll")
+        print("Sent exchange paper command...")
         
         while True:
             if ser.in_waiting > 0:
                 response = ser.readline().decode('utf-8').strip()
                 if response == "complete":
-                    print("Received: complete")
+                    print("Complete exchange")
                     print(f"Start axi draw of {path_svg_file}")
                     plot_svg(path_svg_file, ad)
                     break

@@ -1,0 +1,3 @@
+axidrawinternal==3.9.6
+pyserial==3.5
+svgwrite==1.4.3
