@@ -38,7 +38,7 @@ def plot_svg(file_name, ad):
     ad.disconnect()                 # Close serial port to AxiDraw
     """
     
-def get_path_svg_files(path_svg_dir_path = "/home/jimay/Downloads/idraw/src/path_svg/"):
+def get_path_svg_files(path_svg_dir_path = "/home/jimay/idraw/src/path_svg/"):
     # List of SVG files to plot
     path_svg_files = []
     for filename in os.listdir(path_svg_dir_path):
@@ -66,7 +66,7 @@ try:
                 response = ser.readline().decode('utf-8').strip()
                 if response == "complete":
                     print("Complete exchange")
-                    print(f"Start axi draw of {path_svg_file} ({i+1}/{len_path_svg_files+1})")
+                    print(f"Start AxiDraw of {path_svg_file} ({i+1}/{len_path_svg_files+1})")
                     plot_svg(path_svg_file, ad)
                     break
                 

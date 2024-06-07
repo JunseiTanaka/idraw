@@ -35,8 +35,11 @@ $ source your_venv_name/bin/activate
     $ sudo snap install core
     $ sudo snap install inkscape
     ```
-
-3. 必要なパッケージをインストールする:
+3. AxiDraw_API
+   ```sh
+   $ python -m pip install https://cdn.evilmadscientist.com/dl/ad/public/AxiDraw_API.zip
+   ```
+4. 必要なパッケージをインストールする:
     ```sh
     $ cd idraw/src
     $ pip install -r requirements.txt

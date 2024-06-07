@@ -19,8 +19,8 @@ UI shows informations of
 
 class JSON2SVG:
     def __init__(self, json_file_name='adjectives.json'):#, path_svg_file_path, path_svg_file_name_rule, font_size, font_family, text_anchor, paper_size_mm):
-        self.json_dir_path = '/home/jimay/Downloads/idraw/src/json'
-        self.svg_dir_path = '/home/jimay/Downloads/idraw/src/svg'
+        self.json_dir_path = '/home/jimay/idraw/src/json'
+        self.svg_dir_path = '/home/jimay/idraw/src/svg'
         self.json_file_name = json_file_name
         self.art_texts = None
         
@@ -115,8 +115,8 @@ class JSON2SVG:
 
 class SVG2PathSVG:
     def __init__(self):
-        self.svg_dir_path = "/home/jimay/Downloads/idraw/src/svg/"
-        self.path_svg_dir_path = "/home/jimay/Downloads/idraw/src/path_svg/"
+        self.svg_dir_path = "/home/jimay/idraw/src/svg/"
+        self.path_svg_dir_path = "/home/jimay/idraw/src/path_svg/"
         
         self.svg_files = self._get_svg_files()
         

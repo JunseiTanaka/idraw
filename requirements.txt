@@ -1,0 +1,2 @@
+pyserial==3.5
+svgwrite==1.4.3
