@@ -6,45 +6,47 @@ import subprocess
 import os
 
 
-"""TODO: delete this comments
-UI shows informations of
--json_file_name
--path_svg_file_path
--path_svg_file_name_rule
--font_size
--font_family
--text_anchor
--paper_size_mm(w,l)
-"""
-
 class JSON2SVG:
+    """The detail meanings of each paramater is written in README"""
     def __init__(self, json_file_name='adjectives.json',
-                 path_svg_file_path,
+                 path_svg_file_path= '/home/jimay/idraw/src/path_svg',
                  json_dir_path = '/home/jimay/idraw/src/json',
                  svg_dir_path = '/home/jimay/idraw/src/svg',
-                 font_size = 11 * 1.3 * (374 / 297),
+                 
+                 font_size_pt = 24,
                  font_family = 'Academy Engraved LET',
                  text_anchor = 'middle',
+                 line_hight = 15,
+                 left_margin = 30,
+                 first_y_coordinate = 60,
                  paper_width_mm = 374,
-                 paper_hight_mm = 525
+                 paper_hight_mm = 525,
+                 header_width = 187,
+                 header_height = 30,
                  ):
+
+        self.art_texts = None
         
         self.json_file_name = json_file_name
         self.json_dir_path = json_dir_path
         self.svg_dir_path = svg_dir_path
-        self.art_texts = None
-        
-        self.font_size = font_size# pt, increase font size by 1.3 times
-        self.paper_height = paper_height # mm, updated paper height
-        self.paper_width = paper_width  # mm, updated paper width
-        self.mm_per_pt = 0.351  # mm/pt
 
-        self.header_height = 30  # mm, adjust as needed
-        self.margin = 30  # mm, adjust as needed
-        self.line_height = 15 * 1.3  # mm (adjust as needed), increase line height by 1.3 times
+        self.A3_PAPER_RATIO = 374 / 297
+        self.font_size = font_size_pt * 1.3 * self.A3_PAPER_RATIO # pt, increase font size by 1.3 times, and scaling from A3 paper size
+        self.paper_height = paper_height_mm                  # mm, updated paper height
+        self.paper_width = paper_width_mm                    # mm, updated paper width
+        self.MM_PER_PT = 0.351                            # mm/pt
+        self.header_height = header_height                # mm, adjust as needed
+        self.left_margin = left_margin                              # mm, adjust as needed
+        self.line_height = line_height*1.3                    # mm (adjust as needed), increase line height by 1.3 times
+        self.first_y_coordinate = first_y_coordinate
+        self.font_family = font_family
+        self.text_anchor = text_anchor
+        self.header_width = self.header_width
+        self.header_hight = self.header_hight
 
         self._load_json()
-        if self.json_file_name == "adjectives.json":
+        if self.json_file_name == "adjectives.json":      # if user use the example json, we need some modification. 
             self.art_texts = self._remove_duplicated_adjectives(self.art_texts)
             self.art_texts = self._add_adjectives(self.art_texts)
             
@@ -66,7 +68,7 @@ class JSON2SVG:
         Calculate the number of characters per line based on the width of A3 paper and the font size
         Assume that each character is 0.6 times the font size (this is a rough estimate and may not be accurate for all fonts)
         """
-        self.characters_per_line = int(self.paper_width / (self.font_size * self.mm_per_pt * 0.6)) * 1.2  # Increase the threshold by 5%
+        self.characters_per_line = int(self.paper_width / (self.font_size * self.MM_PER_PT * 0.6)) * 1.2  # Increase the threshold by 5%
         return self.characters_per_line 
         
     def _calc_lines_per_page(self):
@@ -103,30 +105,30 @@ class JSON2SVG:
     def create_svg(self):
         for i in range(0, len(self.lines), self.lines_per_page):
             # Create an SVG drawing
-            dwg = svgwrite.Drawing(f'{self.svg_dir_path}/svg_{i//self.lines_per_page+1:02}.svg', profile='tiny', size=('374mm', '525mm'))  # updated paper size
+            dwg = svgwrite.Drawing(f'{self.svg_dir_path}/svg_{i//self.lines_per_page+1:02}.svg', profile='tiny', size=(f'{self.paper_width}mm', f'{self.paper_height}mm'))  # updated paper size
 
             # Add header on the first page
             if i == 0:
-                header = dwg.text('Self-confessed-critic', insert=(187*mm, 30*mm))  # center of updated paper size
-                header['text-anchor'] = 'middle'
-                header['font-size'] = '24pt'
-                header['font-family'] = 'Academy Engraved LET'
+                header = dwg.text('Self-confessed-critic', insert=(self.header_width*mm, self.header_height*mm))  # center of updated paper size
+                header['text-anchor'] = self.text_anchor
+                header['font-size'] = f'{self.font_size_pt}pt'
+                header['font-family'] = self.font_family
                 dwg.add(header)
 
             # Add lines
             for j, line in enumerate(self.lines[i:i+self.lines_per_page]):
-                text_element = dwg.text(line, insert=(30*(374/297)*mm, (60 + j*self.line_height)*mm))  # adjust y position for each line
+                text_element = dwg.text(line, insert=(self.left_margin*self.A3_PAPER_RATIO*mm, (self.first_y_coordinate + j*self.line_height)*mm))
                 text_element['font-size'] = f'{self.font_size}pt'
-                text_element['font-family'] = 'Academy Engraved LET'
+                text_element['font-family'] = self.font_family
                 dwg.add(text_element)
 
             # Save SVG
             dwg.save()
 
 class SVG2PathSVG:
-    def __init__(self):
-        self.svg_dir_path = "/home/jimay/idraw/src/svg/"
-        self.path_svg_dir_path = "/home/jimay/idraw/src/path_svg/"
+    def __init__(self, svg_dir_path= "/home/jimay/idraw/src/svg/", path_svg_dir_path = "/home/jimay/idraw/src/path_svg/"):
+        self.svg_dir_path = svg_dir_path
+        self.path_svg_dir_path = path_svg_dir_path
         
         self.svg_files = self._get_svg_files()
         
@@ -152,13 +154,14 @@ class SVG2PathSVG:
                 '--export-text-to-path',
                 '--export-filename=' + self.path_svg_dir_path + str("path_") + svg_file
             ]
-            print(self.path_svg_dir_path + str("path_") + svg_file)
+            print("NEXT: " + self.path_svg_dir_path + str("path_") + svg_file)
+            
             try:
                 result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-                print("Command executed successfully")
+                print("Inkscape export-text-to-path : Success")
                 
             except subprocess.CalledProcessError as e:
-                print("Error executing command")
+                print("Inkscape export-taxt-to-path : Failed")
                 print("stdout:", e.stdout.decode())
                 print("stderr:", e.stderr.decode())
 
