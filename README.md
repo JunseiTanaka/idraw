@@ -56,7 +56,7 @@ $ source your_venv_name/bin/activate
 4. AxiDrawとRaspberry PiをUSB接続する。
 5. Arduino UnoとRaspberry PiをUSB接続する。
 
-**注意: USB接続の順番を守ること。AxiDraw → Arduino Unoの順番でRaspberry Piに接続するように。**
+**注意: USB接続の順番を守ること。AxiDraw → Arduino Unoの順番でRaspberry Piに接続する。**
 
 6. ターミナルから以下を実行する:
     ```sh
