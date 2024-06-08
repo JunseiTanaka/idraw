@@ -18,17 +18,27 @@ UI shows informations of
 """
 
 class JSON2SVG:
-    def __init__(self, json_file_name='adjectives.json'):#, path_svg_file_path, path_svg_file_name_rule, font_size, font_family, text_anchor, paper_size_mm):
-        self.json_dir_path = '/home/jimay/idraw/src/json'
-        self.svg_dir_path = '/home/jimay/idraw/src/svg'
+    def __init__(self, json_file_name='adjectives.json',
+                 path_svg_file_path,
+                 json_dir_path = '/home/jimay/idraw/src/json',
+                 svg_dir_path = '/home/jimay/idraw/src/svg',
+                 font_size = 11 * 1.3 * (374 / 297),
+                 font_family = 'Academy Engraved LET',
+                 text_anchor = 'middle',
+                 paper_width_mm = 374,
+                 paper_hight_mm = 525
+                 ):
+        
         self.json_file_name = json_file_name
+        self.json_dir_path = json_dir_path
+        self.svg_dir_path = svg_dir_path
         self.art_texts = None
         
-        self.font_size = 11 * 1.3 * (374 / 297)  # pt, increase font size by 1.3 times
-        self.paper_width = 374  # mm, updated paper width
+        self.font_size = font_size# pt, increase font size by 1.3 times
+        self.paper_height = paper_height # mm, updated paper height
+        self.paper_width = paper_width  # mm, updated paper width
         self.mm_per_pt = 0.351  # mm/pt
 
-        self.paper_height = 525  # mm, updated paper height
         self.header_height = 30  # mm, adjust as needed
         self.margin = 30  # mm, adjust as needed
         self.line_height = 15 * 1.3  # mm (adjust as needed), increase line height by 1.3 times
