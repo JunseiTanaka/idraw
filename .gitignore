@@ -1,5 +1,0 @@
-src/path_svg/*
-!src/path_svg/.gitkeep
-src/svg/*
-!src/svg/.gitkeep
-!src/json/adjectives.json
