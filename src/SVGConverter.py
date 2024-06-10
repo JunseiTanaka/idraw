@@ -13,20 +13,20 @@ class JSON2SVG:
                  json_dir_path = '/home/jimay/idraw/src/json',
                  svg_dir_path = '/home/jimay/idraw/src/svg',
                  
-                 font_size_pt = 24,
+                 font_size_pt = 11,
+                 header_text = 'Self-confessed-critic',
                  font_family = 'Academy Engraved LET',
-                 text_anchor = 'middle',
-                 line_hight = 15,
+                 header_anchor = 'middle',
+                 line_height = 50,
                  left_margin = 30,
                  first_y_coordinate = 60,
                  paper_width_mm = 374,
-                 paper_hight_mm = 525,
+                 paper_height_mm = 525,
                  header_width = 187,
                  header_height = 30,
                  ):
 
-        self.art_texts = None
-        
+        self.art_texts = None        
         self.json_file_name = json_file_name
         self.json_dir_path = json_dir_path
         self.svg_dir_path = svg_dir_path
@@ -41,9 +41,10 @@ class JSON2SVG:
         self.line_height = line_height*1.3                    # mm (adjust as needed), increase line height by 1.3 times
         self.first_y_coordinate = first_y_coordinate
         self.font_family = font_family
-        self.text_anchor = text_anchor
-        self.header_width = self.header_width
-        self.header_hight = self.header_hight
+        self.header_text = header_text
+        self.header_anchor = header_anchor
+        self.header_width = header_width
+        self.header_height = header_height
 
         self._load_json()
         if self.json_file_name == "adjectives.json":      # if user use the example json, we need some modification. 
@@ -73,7 +74,7 @@ class JSON2SVG:
         
     def _calc_lines_per_page(self):
         """Calculate the number of lines per page based on the height of A3 paper and the font size"""
-        self.lines_per_page = int((self.paper_height - self.header_height - 2*self.margin) / self.line_height)
+        self.lines_per_page = int((self.paper_height - self.header_height - 2*self.left_margin) / self.line_height)
         return self.lines_per_page 
 
     def _remove_duplicated_adjectives(self, cont):
@@ -105,13 +106,13 @@ class JSON2SVG:
     def create_svg(self):
         for i in range(0, len(self.lines), self.lines_per_page):
             # Create an SVG drawing
-            dwg = svgwrite.Drawing(f'{self.svg_dir_path}/svg_{i//self.lines_per_page+1:02}.svg', profile='tiny', size=(f'{self.paper_width}mm', f'{self.paper_height}mm'))  # updated paper size
+            dwg = svgwrite.Drawing(f'{self.svg_dir_path}/output_{i//self.lines_per_page+1:02}.svg', profile='tiny', size=(f'{self.paper_width}mm', f'{self.paper_height}mm'))  # updated paper size
 
             # Add header on the first page
             if i == 0:
-                header = dwg.text('Self-confessed-critic', insert=(self.header_width*mm, self.header_height*mm))  # center of updated paper size
-                header['text-anchor'] = self.text_anchor
-                header['font-size'] = f'{self.font_size_pt}pt'
+                header = dwg.text(self.header_text, insert=(self.header_width*mm, self.header_height*mm))  # center of updated paper size
+                header['text-anchor'] = self.header_anchor
+                header['font-size'] = f'{self.font_size}pt'
                 header['font-family'] = self.font_family
                 dwg.add(header)
 
@@ -136,13 +137,14 @@ class SVG2PathSVG:
         svg_files = []
         # 指定されたディレクトリ内のファイルを取得
         for filename in os.listdir(self.svg_dir_path):
+            print(filename)
             # ファイルが.svg拡張子を持つか確認
             if filename.endswith(".svg"):
                 # ファイルの絶対パスをリストに追加
                 svg_files.append(os.path.join(filename))
 
             svg_files.sort()
-                
+        print(svg_files)
         return svg_files
      
 
@@ -154,7 +156,7 @@ class SVG2PathSVG:
                 '--export-text-to-path',
                 '--export-filename=' + self.path_svg_dir_path + str("path_") + svg_file
             ]
-            print("NEXT: " + self.path_svg_dir_path + str("path_") + svg_file)
+            print("NEXT: " + self.svg_dir_path + str("path_") + svg_file)
             
             try:
                 result = subprocess.run(command, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
@@ -166,8 +168,8 @@ class SVG2PathSVG:
                 print("stderr:", e.stderr.decode())
 
 if __name__ == "__main__":
-    svg_converter = JSON2SVG("adjectives.json")
-    svg_data = svg_converter.create_svg()
+#    svg_converter = JSON2SVG("adjectives.json")
+#    svg_data = svg_converter.create_svg()
     
     path_svg_converter = SVG2PathSVG()
     path_svg_converter.create_path_svg()

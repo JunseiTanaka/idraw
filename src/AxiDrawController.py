@@ -14,12 +14,12 @@ def plot_svg(file_name, ad):
     ad.plot_setup(file_name)
     # Load file & configure plot context
     # Plotting options can be set, here after plot_setup().
-    ad.options.pen_pos_down = 55
+    ad.options.pen_pos_down = 70 #BECAREFUL: this up and is inverted.
     ad.options.pen_pos_up = 20
     ad.options.pen_rate_lower = 50
     ad.options.pen_rate_raise = 75
-    ad.options.speed_pendown = 100
-    ad.options.speed_penup = 100
+    ad.options.speed_pendown = 25
+    ad.options.speed_penup = 25
     ad.options.model =  5    # AxiDraw A3
     ad.options.units = 1            # set working units to cm.
     ad.options.reordering = 0
@@ -55,20 +55,21 @@ len_path_svg_files = len(path_svg_files)
 ad = axidraw.AxiDraw()          # Create class instance
 
 try:
-    # Plot each SVG file in sequence
-    for i, path_svg_file in enumerate(path_svg_files):
-
-        ser.write(b'roll\n')
-        print("exchanging paper...")
+    while True:
+        # Plot each SVG file in sequence
+        for i, path_svg_file in enumerate(path_svg_files):
         
-        while True:
-            if ser.in_waiting > 0:
-                response = ser.readline().decode('utf-8').strip()
-                if response == "complete":
-                    print("Complete exchange")
-                    print(f"Start AxiDraw of {path_svg_file} ({i+1}/{len_path_svg_files+1})")
-                    plot_svg(path_svg_file, ad)
-                    break
+            ser.write(b'roll\n')
+            print("exchanging paper...")
+        
+            while True:
+                if ser.in_waiting > 0:
+                    response = ser.readline().decode('utf-8').strip()
+                    if response == "complete":
+                        print("Complete exchange")
+                        print(f"Start AxiDraw of {path_svg_file} ({i+1}/{len_path_svg_files+1})")
+                        plot_svg(path_svg_file, ad)
+                        break
                 
 except serial.SerialException as e:
     print(f"Serial exception: {e}")
