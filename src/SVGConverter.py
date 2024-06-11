@@ -13,7 +13,7 @@ class JSON2SVG:
                  json_dir_path = '/home/jimay/idraw/src/json',
                  svg_dir_path = '/home/jimay/idraw/src/svg',
                  
-                 font_size_pt = 11,
+                 font_size_pt = 20,
                  header_text = 'Self-confessed-critic',
                  font_family = 'Academy Engraved LET',
                  header_anchor = 'middle',
@@ -24,6 +24,7 @@ class JSON2SVG:
                  paper_height_mm = 525,
                  header_width = 187,
                  header_height = 30,
+                 header_font_size = 40,
                  ):
 
         self.art_texts = None        
@@ -45,6 +46,7 @@ class JSON2SVG:
         self.header_anchor = header_anchor
         self.header_width = header_width
         self.header_height = header_height
+        self.header_font_size = header_font_size
 
         self._load_json()
         if self.json_file_name == "adjectives.json":      # if user use the example json, we need some modification. 
@@ -112,7 +114,7 @@ class JSON2SVG:
             if i == 0:
                 header = dwg.text(self.header_text, insert=(self.header_width*mm, self.header_height*mm))  # center of updated paper size
                 header['text-anchor'] = self.header_anchor
-                header['font-size'] = f'{self.font_size}pt'
+                header['font-size'] = f'{self.header_font_size}pt'
                 header['font-family'] = self.font_family
                 dwg.add(header)
 
@@ -173,5 +175,4 @@ if __name__ == "__main__":
     
     path_svg_converter = SVG2PathSVG()
     path_svg_converter.create_path_svg()
-
 

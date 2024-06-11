@@ -16,11 +16,12 @@ def plot_svg(file_name, ad):
     # Plotting options can be set, here after plot_setup().
     ad.options.pen_pos_down = 70 #BECAREFUL: this up and is inverted.
     ad.options.pen_pos_up = 20
-    ad.options.pen_rate_lower = 50
-    ad.options.pen_rate_raise = 75
+    ad.options.pen_rate_lower = 1
+    ad.options.pen_rate_raise = 50
     ad.options.speed_pendown = 25
     ad.options.speed_penup = 25
-    ad.options.model =  5    # AxiDraw A3
+    ad.options.accel = 1
+    ad.options.model = 5    # AxiDraw A3
     ad.options.units = 1            # set working units to cm.
     ad.options.reordering = 0
     ad.plot_run()
@@ -37,7 +38,7 @@ def plot_svg(file_name, ad):
     ad.delay(5000)
     ad.disconnect()                 # Close serial port to AxiDraw
     """
-    
+
 def get_path_svg_files(path_svg_dir_path = "/home/jimay/idraw/src/path_svg/"):
     # List of SVG files to plot
     path_svg_files = []
@@ -54,14 +55,20 @@ path_svg_files = get_path_svg_files()
 len_path_svg_files = len(path_svg_files)
 ad = axidraw.AxiDraw()          # Create class instance
 
+is_first_loop=True
 try:
     while True:
         # Plot each SVG file in sequence
         for i, path_svg_file in enumerate(path_svg_files):
-        
+            if (not is_first_loop) and (i==0 or i==1):
+                print("second loop -> skip firt pages")
+                continue
+            is_first_loop=False
+            
+            print("start conversation")
             ser.write(b'roll\n')
             print("exchanging paper...")
-        
+            
             while True:
                 if ser.in_waiting > 0:
                     response = ser.readline().decode('utf-8').strip()
@@ -76,7 +83,7 @@ except serial.SerialException as e:
     
 except KeyboardInterrupt as e:
     print(f"Ctl-C")
-    
+
 finally:
     ad.moveto(0, 0)
     ad.penup()
