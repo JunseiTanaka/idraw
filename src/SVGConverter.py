@@ -13,18 +13,19 @@ class JSON2SVG:
                  json_dir_path = '/home/jimay/idraw/src/json',
                  svg_dir_path = '/home/jimay/idraw/src/svg',
                  
-                 font_size_pt = 20,
+                 font_size_pt = 22,
+                 header_font_size_pt = 26,
+
                  header_text = 'Self-confessed-critic',
                  font_family = 'Academy Engraved LET',
                  header_anchor = 'middle',
-                 line_height = 50,
+                 line_height = 15,
                  left_margin = 30,
-                 first_y_coordinate = 60,
+                 first_y_coordinate = 80,
                  paper_width_mm = 374,
                  paper_height_mm = 525,
                  header_width = 187,
-                 header_height = 30,
-                 header_font_size = 40,
+                 header_height = 50,
                  ):
 
         self.art_texts = None        
@@ -34,6 +35,7 @@ class JSON2SVG:
 
         self.A3_PAPER_RATIO = 374 / 297
         self.font_size = font_size_pt * 1.3 * self.A3_PAPER_RATIO # pt, increase font size by 1.3 times, and scaling from A3 paper size
+        self.header_font_size = header_font_size_pt * 1.3 * self.A3_PAPER_RATIO # pt, increase font size by 1.3 times, and scaling from A3 paper size       
         self.paper_height = paper_height_mm                  # mm, updated paper height
         self.paper_width = paper_width_mm                    # mm, updated paper width
         self.MM_PER_PT = 0.351                            # mm/pt
@@ -46,13 +48,12 @@ class JSON2SVG:
         self.header_anchor = header_anchor
         self.header_width = header_width
         self.header_height = header_height
-        self.header_font_size = header_font_size
 
         self._load_json()
         if self.json_file_name == "adjectives.json":      # if user use the example json, we need some modification. 
             self.art_texts = self._remove_duplicated_adjectives(self.art_texts)
             self.art_texts = self._add_adjectives(self.art_texts)
-            
+       
         self.characters_per_line = self._calc_characters_per_line()
         self.lines_per_page = self._calc_lines_per_page()
         self.lines = self._split_texts_for_paper_width()
@@ -115,6 +116,7 @@ class JSON2SVG:
                 header = dwg.text(self.header_text, insert=(self.header_width*mm, self.header_height*mm))  # center of updated paper size
                 header['text-anchor'] = self.header_anchor
                 header['font-size'] = f'{self.header_font_size}pt'
+                print(self.header_font_size, self.font_size)
                 header['font-family'] = self.font_family
                 dwg.add(header)
 
@@ -170,8 +172,8 @@ class SVG2PathSVG:
                 print("stderr:", e.stderr.decode())
 
 if __name__ == "__main__":
-#    svg_converter = JSON2SVG("adjectives.json")
-#    svg_data = svg_converter.create_svg()
+    svg_converter = JSON2SVG("adjectives.json")
+    svg_data = svg_converter.create_svg()
     
     path_svg_converter = SVG2PathSVG()
     path_svg_converter.create_path_svg()

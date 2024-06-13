@@ -16,7 +16,7 @@ def plot_svg(file_name, ad):
     # Plotting options can be set, here after plot_setup().
     ad.options.pen_pos_down = 70 #BECAREFUL: this up and is inverted.
     ad.options.pen_pos_up = 20
-    ad.options.pen_rate_lower = 1
+    ad.options.pen_rate_lower = 50
     ad.options.pen_rate_raise = 50
     ad.options.speed_pendown = 25
     ad.options.speed_penup = 25
@@ -63,7 +63,9 @@ try:
             if (not is_first_loop) and (i==0 or i==1):
                 print("second loop -> skip firt pages")
                 continue
-            is_first_loop=False
+            
+            if i == 1 and is_first_loop:
+                is_first_loop=False
             
             print("start conversation")
             ser.write(b'roll\n')
@@ -74,7 +76,7 @@ try:
                     response = ser.readline().decode('utf-8').strip()
                     if response == "complete":
                         print("Complete exchange")
-                        print(f"Start AxiDraw of {path_svg_file} ({i+1}/{len_path_svg_files+1})")
+                        print(f"Start AxiDraw of {path_svg_file} ({i+1}/{len_path_svg_files})")
                         plot_svg(path_svg_file, ad)
                         break
                 
