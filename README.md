@@ -47,7 +47,7 @@ $ source your_venv_name/bin/activate
 5. USBポートの名前を固定
    ArduinoとRaspiを接続(ペンプロッターは接続しない)
    ```sh
-   $ udevadm info -a -n ttyUSB0
+   $ udevadm info -a -n ttyACM0
    ```
    ATTRS{idProduct}=="AAA"
    ATTRS{idVendor}=="BBB"
