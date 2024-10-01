@@ -89,7 +89,7 @@ $ source your_venv_name/bin/activate
 2. jsonデータを`idraw/src/json`ディレクトリに移動する。
 3. ターミナルから以下を実行し、新しいファイルが`path_svg`ディレクトリ内に保存されていることを確認する:
     ```sh
-    $ python3 SVGConverter.py
+    $ python3 ~/idraw/src/SVGConverter.py
     ```
     
 5. AxiDrawとRaspberry PiをUSB接続する。
@@ -100,7 +100,7 @@ USB接続はどちらからでも大丈夫です。
 ## ②AxiDrawを実行する
 7. ターミナルから以下を実行する:
     ```sh
-    $ python3 AxiDrawController.py
+    $ python3 ~/idraw/src/AxiDrawController.py
     ```
 ①は毎度実行する必要はありません。一度PATHデータが生成されれば②だけ実行すれば大丈夫です。
 
