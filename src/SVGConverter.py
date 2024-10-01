@@ -65,6 +65,7 @@ class JSON2SVG:
         """
         with open(f'{self.json_dir_path}/{self.json_file_name}', 'r') as f:
             self.art_texts = json.load(f)
+            print(self.art_texts)
             return self.art_texts
     
     def _calc_characters_per_line(self):        
@@ -85,8 +86,14 @@ class JSON2SVG:
         This is only for the example json data, "adjectives.json"
         so if your art texts are not this, you need to consider this method.
         """
-        no_duplicated_cont = list(set(cont))
-        return no_duplicated_cont
+        seen = set()
+        result = []
+        for c in cont:
+            if c not in seen:
+                result.append(c)
+                seen.add(c)
+
+        return result
     
     def _add_adjectives(self, adjectives):
         """

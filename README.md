@@ -41,7 +41,7 @@ $ source your_venv_name/bin/activate
    ```
 4. 必要なパッケージをインストールする:
     ```sh
-    $ cd idraw/src
+    $ cd idraw
     $ pip install -r requirements.txt
     ```
 
