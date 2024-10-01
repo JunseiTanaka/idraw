@@ -10,7 +10,6 @@ time.sleep(2)  # シリアル接続の安定化のための待機時間
 
 # Function to plot a given SVG file
 def plot_svg(file_name, ad):
-    ad.options.mode = "plot"
     ad.plot_setup(file_name)
     # Load file & configure plot context
     # Plotting options can be set, here after plot_setup().
@@ -26,19 +25,6 @@ def plot_svg(file_name, ad):
     ad.options.reordering = 0
     ad.plot_run()
 
-    ad.interactive()                # Enter interactive context
-    if not ad.connect():            # Open serial port to AxiDraw;
-        print("No connection, Exit prgram")
-        quit()                      #   Exit, if no connection.
-    ad.pendown()
-
-    """                            # Absolute moves follo
-    ad.moveto(0, 0)                 # Pen-up move, back to origin.
-    ad.penup()
-    ad.delay(5000)
-    ad.disconnect()                 # Close serial port to AxiDraw
-    """
-
 def get_path_svg_files(path_svg_dir_path = "/home/jimay/idraw/src/path_svg/"):
     # List of SVG files to plot
     path_svg_files = []
@@ -50,12 +36,26 @@ def get_path_svg_files(path_svg_dir_path = "/home/jimay/idraw/src/path_svg/"):
         
     return path_svg_files
 
+def initialize(ad):
+    ad.options.port = "/dev/axidraw"
+    ad.options.mode = "manual"
+    ad.options.manual_cmd = "raise_pen"
+    ad.plot_setup()
+    time.sleep(3)
+    ad.plot_run()
 
+    ad.options.manual_cmd = "lower_pen"
+    ad.plot_setup()
+    time.sleep(3)
+    ad.plot_run()
+    print("initialized")
+    
 path_svg_files = get_path_svg_files()
 len_path_svg_files = len(path_svg_files)
-ad = axidraw.AxiDraw()          # Create class instance
-
+ad = axidraw.AxiDraw()
+initialize(ad)
 is_first_loop=True
+
 try:
     while True:
         # Plot each SVG file in sequence
