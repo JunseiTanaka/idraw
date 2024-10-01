@@ -44,7 +44,33 @@ $ source your_venv_name/bin/activate
     $ cd idraw
     $ pip install -r requirements.txt
     ```
-
+5. USBポートの名前を固定
+   ArduinoとRaspiを接続(ペンプロッターは接続しない)
+   ```sh
+   $ udevadm info -a -n ttyUSB0
+   ```
+   ATTRS{idProduct}=="AAA"
+   ATTRS{idVendor}=="BBB"
+   の出力結果をメモする。
+   ```sh
+   $ sudo nano /etc/udev/rules.d/99-usb-serial.rules
+   ```
+   
+   99-usb-serial.rules
+   ```sh
+   SUBSYSTEM=="ttyACM*", ATTRS{idProduct}=="AAA(先ほど調べた値)", ATTRS{idVendor}=="BBB(先ほど調べた値)", SYMLINK+="arduino",MODE="0666"
+   ```
+   ctl-Xで抜け出し、yを押して保存。
+   udevの再起動をするために以下を実行
+   ```sh
+   $ sudo udevadm trigger
+   ```
+   最後に
+   ```sh
+   $  ls /dev/arduino
+   ```
+   でファイルが見つかれば完了。
+   
 # 使い方
 ## ①SVGデータをPATHデータに変換する
 ### SVGデータがある場合
