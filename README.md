@@ -46,13 +46,21 @@ $ source your_venv_name/bin/activate
     ```
 
 ## 使い方
-
+# SVGデータがある場合
 1. AxiDrawで描いて欲しいSVGデータを用意する。
 2. SVGデータを`idraw/src/svg`ディレクトリに移動する。
 3. ターミナルから以下を実行し、新しいファイルが`path_svg`ディレクトリ内に保存されていることを確認する:
     ```sh
     $ python3 SVGConverter.py
     ```
+# SVGデータがないが、書きたい文字がjsonファイルにある場合
+1. AxiDrawで描いて欲しい文字が書かれたjsonデータを用意する。
+2. jsonデータを`idraw/src/json`ディレクトリに移動する。
+3. ターミナルから以下を実行し、新しいファイルが`path_svg`ディレクトリ内に保存されていることを確認する:
+    ```sh
+    $ python3 SVGConverter.py
+    ```
+    
 4. AxiDrawとRaspberry PiをUSB接続する。
 5. Arduino UnoとRaspberry PiをUSB接続する。
 
