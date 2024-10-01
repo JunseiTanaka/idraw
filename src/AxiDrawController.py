@@ -4,7 +4,7 @@ import serial
 import time
 
 
-ser = serial.Serial('/dev/ttyACM1', 115200, timeout=1)
+ser = serial.Serial('/dev/arduino', 115200, timeout=1)
 time.sleep(2)  # シリアル接続の安定化のための待機時間
 
 
