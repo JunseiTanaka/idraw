@@ -44,34 +44,67 @@ $ source your_venv_name/bin/activate
     $ cd idraw
     $ pip install -r requirements.txt
     ```
-
-## 使い方
-# SVGデータがある場合
+5. USBポートの名前を固定
+   ArduinoとRaspiを接続(ペンプロッターは接続しない)
+   ```sh
+   $ udevadm info -a -n ttyACM0
+   ```
+   ATTRS{idProduct}=="AAA"
+   ATTRS{idVendor}=="BBB"
+   の出力結果をメモする。
+   ```sh
+   $ sudo nano /etc/udev/rules.d/99-usb-serial.rules
+   ```
+   
+   99-usb-serial.rules
+   ```sh
+   SUBSYSTEM=="ttyACM*", ATTRS{idProduct}=="AAA(先ほど調べた値)", ATTRS{idVendor}=="BBB(先ほど調べた値)", SYMLINK+="arduino",MODE="0666"
+   ```
+   ctl-Xで抜け出し、yを押して保存。
+   udevの再起動をするために以下を実行
+   ```sh
+   $ sudo udevadm trigger
+   ```
+   最後に
+   ```sh
+   $  ls /dev/arduino
+   ```
+   でファイルが見つかれば完了。
+   
+# 使い方
+## ①SVGデータをPATHデータに変換する
+### SVGデータがある場合
 1. AxiDrawで描いて欲しいSVGデータを用意する。
 2. SVGデータを`idraw/src/svg`ディレクトリに移動する。
 3. ターミナルから以下を実行し、新しいファイルが`path_svg`ディレクトリ内に保存されていることを確認する:
     ```sh
     $ python3 SVGConverter.py
     ```
-# SVGデータがないが、書きたい文字がjsonファイルにある場合
+    
+5. AxiDrawとRaspberry PiをUSB接続する。
+6. Arduino UnoとRaspberry PiをUSB接続する。
+
+### SVGデータがないが、書きたい文字がjsonファイルにある場合
 1. AxiDrawで描いて欲しい文字が書かれたjsonデータを用意する。
 2. jsonデータを`idraw/src/json`ディレクトリに移動する。
 3. ターミナルから以下を実行し、新しいファイルが`path_svg`ディレクトリ内に保存されていることを確認する:
     ```sh
-    $ python3 SVGConverter.py
+    $ python3 ~/idraw/src/SVGConverter.py
     ```
     
-4. AxiDrawとRaspberry PiをUSB接続する。
-5. Arduino UnoとRaspberry PiをUSB接続する。
+5. AxiDrawとRaspberry PiをUSB接続する。
+6. Arduino UnoとRaspberry PiをUSB接続する。
 
-**注意: USB接続の順番を守ること。AxiDraw → Arduino Unoの順番でRaspberry Piに接続する。**
-
-6. ターミナルから以下を実行する:
+~~**注意: USB接続の順番を守ること。AxiDraw → Arduino Unoの順番でRaspberry Piに接続する。**~~
+USB接続はどちらからでも大丈夫です。
+## ②AxiDrawを実行する
+7. ターミナルから以下を実行する:
     ```sh
-    $ python3 AxiDrawController.py
+    $ python3 ~/idraw/src/AxiDrawController.py
     ```
-```
+①は毎度実行する必要はありません。一度PATHデータが生成されれば②だけ実行すれば大丈夫です。
 
+```
 ## License
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
 ```
